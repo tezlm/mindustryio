@@ -1,10 +1,10 @@
 {
   "name": "mindustryio",
-  "version": "1.0.0",
-  "description": "a",
+  "version": "0.0.1",
+  "description": "tools for interacting with mindustry",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test/schematic.js"
+    "test": "node ./test/index.js"
   },
   "repository": {
     "type": "git",

@@ -5,13 +5,13 @@ class Position {
       this.x = pos.x;
       this.y = pos.y;
     } else {
-      this.x = pos % overflow;
-      this.y = Math.floor(pos / overflow);
+      this.y = pos % overflow;
+      this.x = Math.floor(pos / overflow);
     }
   }
 
   pack() {
-    return this.y * overflow + this.x;
+    return this.x * overflow + this.y;
   }
 }
 
