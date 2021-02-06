@@ -1,0 +1,19 @@
+{
+  "name": "mindustryio",
+  "version": "1.0.0",
+  "description": "a",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/schematic.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sample-text-here/mindustryio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sample-text-here/mindustryio/issues"
+  },
+  "homepage": "https://github.com/sample-text-here/mindustryio#readme"
+}
