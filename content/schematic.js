@@ -1,5 +1,16 @@
 const zlib = require("zlib");
 const { Reader, Writer, TypeIO, Position } = require("../util");
+const header = Buffer.from("msch");
+
+class Block {
+  constructor(data = {}) {
+    this.block = "air";
+    this.position = new Position(0);
+    this.config = null;
+    this.rotation = 0;
+    Object.assign(this, data);
+  }
+}
 
 class Schematic {
   // load or make a new Schematic
@@ -10,7 +21,7 @@ class Schematic {
 
     // make sure the header exists
     const rawReader = new Reader(buffer);
-    if (!rawReader.raw(4).equals(Buffer.from("msch"))) err("Incorrect header");
+    if (!rawReader.raw(4).equals(header)) err("Incorrect header");
     if (rawReader.byte() !== 1) err("Unsupported schematic version");
 
     // create a reader and grab width/height
@@ -28,7 +39,7 @@ class Schematic {
     const dictionary = [],
       dictLen = reader.byte();
     for (let i = 0; i < dictLen; i++) {
-      dictionary[i] = reader.string();
+      dictionary.push(reader.string());
     }
 
     // actually read the blocks
@@ -39,12 +50,14 @@ class Schematic {
       const config = TypeIO.read(reader);
       const rotation = reader.byte();
       if (block === "air") continue;
-      this.blocks.push({
-        block,
-        position,
-        config,
-        rotation,
-      });
+      this.blocks.push(
+        new Block({
+          block,
+          position,
+          config,
+          rotation,
+        })
+      );
     }
   }
 
@@ -55,11 +68,35 @@ class Schematic {
   }
 
   // get a block at a x and y position
+  // creates it if it doesn't exist
   block(x, y) {
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height)
+      err("out of bounds, resize schematic first!");
     for (let i of this.blocks) {
       if (i.position.x === x && i.position.y === y) return i;
     }
-    return null;
+
+    const block = new Block({
+      position: new Position({ x, y }),
+    });
+
+    this.blocks.push(block);
+    return block;
+  }
+
+  // delete a block at the x and y position
+  delete(x, y) {
+    let index = -1;
+    for (let i = 0; i < this.blocks.length; i++) {
+      const pos = this.blocks[i].position;
+      if (pos.x === x && pos.y === y) index = i;
+    }
+    if (index >= 0) this.blocks.splice(index, 1);
+  }
+
+  // loop through the blocks
+  each(callback) {
+    this.blocks.forEach(callback);
   }
 
   toBuffer() {
@@ -83,7 +120,7 @@ class Schematic {
     writer.byte(dictionary.length);
     dictionary.forEach((i) => writer.string(i));
 
-    writer.byte(this.blocks.length);
+    writer.int(this.blocks.length);
     for (let i of this.blocks) {
       writer.byte(dictionary.indexOf(i.block));
       writer.int(i.position.pack());
@@ -92,7 +129,8 @@ class Schematic {
     }
 
     return Buffer.concat([
-      Buffer.from("msch\u0001"),
+      header,
+      Buffer.from("\u0001"),
       zlib.deflateSync(writer.toBuffer()),
     ]);
   }

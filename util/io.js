@@ -31,7 +31,8 @@ class Reader {
 
   string() {
     const len = this.short();
-    return this.raw(len).toString();
+    const str = this.raw(len).toString();
+    return str;
   }
 }
 
@@ -71,7 +72,7 @@ class Writer {
   }
 
   string(str) {
-    this.short(str.len);
+    this.short(str.length);
     this.raw(str);
   }
 

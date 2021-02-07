@@ -1,4 +1,5 @@
 const { err, overflow, Position } = require("./misc.js");
+const { getByName, Content } = require("../content/content.js");
 module.exports = {
   read(stream) {
     const type = stream.byte();
@@ -14,8 +15,7 @@ module.exports = {
       case 4:
         return stream.string();
       case 5:
-        // need to actually return the correct content
-        return [stream.byte(), stream.short()];
+        return getByName(stream.byte(), stream.short());
       case 6:
         const length = stream.short();
         const arr = [];
@@ -54,13 +54,18 @@ module.exports = {
     } else if (typeof thing === "string") {
       stream.byte(4);
       stream.string(thing);
+    } else if (thing instanceof Content) {
+      stream.byte(5);
+      stream.byte(thing.typeId);
+      stream.short(thing.id);
     } else if (thing instanceof Array) {
       stream.byte(6);
       stream.short(thing.length);
       for (let i of thing) stream.int(i);
     } else if (thing instanceof Position) {
       stream.byte(7);
-      stream.int(thing.pack());
+      stream.int(thing.x);
+      stream.int(thing.y);
     } else {
       err("can't pack");
     }
