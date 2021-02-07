@@ -1,5 +1,5 @@
 const zlib = require("zlib");
-const { Reader, Writer, TypeIO, Position } = require("../util");
+const { Reader, Writer, TypeIO, Position, capitalize } = require("../util");
 const header = Buffer.from("msch");
 
 class Block {
@@ -9,6 +9,17 @@ class Block {
     this.config = null;
     this.rotation = 0;
     Object.assign(this, data);
+    const me = this;
+    ["block", "position", "config", "rotation"].forEach((i) => {
+      const fmt = capitalize(i);
+      this["get" + fmt] = () => {
+        return me[i];
+      };
+      this["set" + fmt] = (val) => {
+        me[i] = val;
+        return me;
+      };
+    });
   }
 }
 

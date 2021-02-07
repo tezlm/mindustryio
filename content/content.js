@@ -1,4 +1,4 @@
-const { err } = require("../util/misc.js");
+const { err, capitalize } = require("../util/misc.js");
 
 const ContentType = [
   "item",
@@ -315,10 +315,6 @@ class Content {
   get id() {
     return content[this.type].indexOf(this.name);
   }
-}
-
-function capitalize(str) {
-  return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
 function getByName(kind, id) {

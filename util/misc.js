@@ -15,8 +15,12 @@ class Position {
   }
 }
 
+function capitalize(str) {
+  return str[0].toUpperCase() + str.slice(1).toLowerCase();
+}
+
 function err(why) {
   throw new Error(why);
 }
 
-module.exports = { Position, overflow, err };
+module.exports = { Position, overflow, err, capitalize };

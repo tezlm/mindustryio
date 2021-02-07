@@ -2,6 +2,23 @@
 
 tools for interacting with mindustry files
 
+# example
+
+```js
+const fs = require("fs");
+const { Schematic } = require("mindustryio");
+const schem = new Schematic();
+
+schem.resize(5, 5);
+schem.tags.name = "example";
+for (let x = 0; x < 5; x++) {
+  for (let y = 0; y < 5; y++) {
+    schem.block(x, y).setBlock("copper-wall");
+  }
+}
+fs.writeFileSync("test.msch", schem.toBuffer());
+```
+
 # documentation
 
 ### creating schematics
@@ -57,6 +74,10 @@ what's the block's rotation?
 `Block.config => Config`
 
 what's the block's config?
+
+all properties have a corresponding `getQwerty`
+and `setQwerty` function (`getBlock()`, 
+`setBlock("copper-wall")`, etc..)
 
 ### position
 

@@ -11,6 +11,8 @@ assert(schem.block(2, 2).block, "phase-weaver");
 assert(schem.block(3, 4).block, "inverted-sorter");
 schem.delete(3, 4);
 assert(schem.block(3, 4).block, "air");
+schem.block(3, 4).setBlock("copper-wall");
+assert(schem.block(3, 4).block, "copper-wall");
 // if it crashes, something's wrong
 new Schematic(schem.toBuffer());
 
