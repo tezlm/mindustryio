@@ -1,6 +1,6 @@
 {
   "name": "mindustryio",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "tools for interacting with mindustry",
   "main": "index.js",
   "scripts": {
