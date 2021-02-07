@@ -1,5 +1,5 @@
 const zlib = require("zlib");
-const { Reader, TypeIO, Position } = require("../util");
+const { Reader, Writer, TypeIO, Position } = require("../util");
 
 class Schematic {
   // load or make a new Schematic
@@ -30,7 +30,7 @@ class Schematic {
     for (let i = 0; i < dictLen; i++) {
       dictionary[i] = reader.string();
     }
-    
+
     // actually read the blocks
     const totalBlocks = reader.int();
     for (let i = 0; i < totalBlocks; i++) {
@@ -39,7 +39,7 @@ class Schematic {
       const config = TypeIO.read(reader);
       const rotation = reader.byte();
       if (block === "air") continue;
-      this.tiles.push({
+      this.blocks.push({
         block,
         position,
         config,
@@ -53,13 +53,48 @@ class Schematic {
     this.height = height;
     this.width = width;
   }
-  
+
   // get a block at a x and y position
   block(x, y) {
-    for (let i of this.tiles) {
+    for (let i of this.blocks) {
       if (i.position.x === x && i.position.y === y) return i;
     }
     return null;
+  }
+
+  toBuffer() {
+    // the constructor, but it's opposite day
+
+    const writer = new Writer();
+    writer.short(this.width);
+    writer.short(this.height);
+
+    writer.byte(Object.keys(this.tags).length);
+    for (let i in this.tags) {
+      writer.string(i);
+      writer.string(this.tags[i]);
+    }
+
+    const dictionary = this.blocks.reduce((acc, i) => {
+      if (!acc.includes(i.block)) acc.push(i.block);
+      return acc;
+    }, []);
+
+    writer.byte(dictionary.length);
+    dictionary.forEach((i) => writer.string(i));
+
+    writer.byte(this.blocks.length);
+    for (let i of this.blocks) {
+      writer.byte(dictionary.indexOf(i.block));
+      writer.int(i.position.pack());
+      TypeIO.write(writer, i.config);
+      writer.byte(i.rotation);
+    }
+
+    return Buffer.concat([
+      Buffer.from("msch\u0001"),
+      zlib.deflateSync(writer.toBuffer()),
+    ]);
   }
 
   // reset the schematic
@@ -67,7 +102,7 @@ class Schematic {
     this.width = 0;
     this.height = 0;
     this.tags = {};
-    this.tiles = [];
+    this.blocks = [];
   }
 }
 

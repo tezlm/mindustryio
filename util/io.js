@@ -40,28 +40,34 @@ class Writer {
     this.parts = [];
   }
 
+  write(size, kind, value) {
+    const buf = Buffer.alloc(size);
+    buf[kind](value);
+    this.parts.push(buf);
+  }
+
   raw(bytes) {
     this.parts.push(Buffer.from(bytes));
   }
 
   byte(val) {
-    this.parts.push(Buffer.alloc(1).writeInt8(val));
+    this.write(1, "writeInt8", val);
   }
 
   short(val) {
-    this.parts.push(Buffer.alloc(2).writeInt16BE(val));
+    this.write(2, "writeInt16BE", val);
   }
 
   int(val) {
-    this.parts.push(Buffer.alloc(4).writeInt32BE(val));
+    this.write(4, "writeInt32BE", val);
   }
 
   long(val) {
-    this.parts.push(Buffer.alloc(8).writeBigInt64BE(val));
+    this.write(8, "writeBigInt64BE", val);
   }
 
   float(val) {
-    this.parts.push(Buffer.alloc(4).writeFloatBE(val));
+    this.write(4, "writeFloatBE", val);
   }
 
   string(str) {

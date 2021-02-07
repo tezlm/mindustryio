@@ -19,4 +19,4 @@ function err(why) {
   throw new Error(why);
 }
 
-module.exports = { Position, err };
+module.exports = { Position, overflow, err };
