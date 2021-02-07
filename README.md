@@ -2,6 +2,8 @@
 
 tools for interacting with mindustry files
 
+**this is a work in progress, do not expect everything to work**
+
 # example
 
 ```js
