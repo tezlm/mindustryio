@@ -104,3 +104,15 @@ the content type
 
 the content's name
 
+# roadmap
+
+- currently, only a small subset of the features are
+  supported.
+
+- version 1 will be released when all features are 
+  supported and there are no major bugs
+
+- version 2 will be released when i implement map io
+  
+- more versions will be released when the schematic/map
+  system changes signifigantly

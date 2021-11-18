@@ -1,3 +1,4 @@
 module.exports = {
-  Schematic: require("./content/schematic.js"),
+	Schematic: require("./content/schematic.js"),
 };
+

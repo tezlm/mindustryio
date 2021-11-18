@@ -1,19 +1,19 @@
 {
-  "name": "mindustryio",
-  "version": "0.0.6",
-  "description": "tools for interacting with mindustry",
-  "main": "index.js",
-  "scripts": {
-    "test": "node ./test/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sample-text-here/mindustryio.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sample-text-here/mindustryio/issues"
-  },
-  "homepage": "https://github.com/sample-text-here/mindustryio#readme"
+	"name": "mindustryio",
+	"version": "0.1.0",
+	"description": "tools for interacting with mindustry",
+	"main": "index.js",
+	"scripts": {
+		"test": "node ./test/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sample-text-here/mindustryio.git"
+	},
+	"author": "tezlm",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/sample-text-here/mindustryio/issues"
+	},
+	"homepage": "https://github.com/sample-text-here/mindustryio#readme"
 }
