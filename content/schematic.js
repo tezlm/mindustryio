@@ -1,23 +1,7 @@
 const zlib = require("zlib");
-const { Reader, Writer, TypeIO, Position, capitalize } = require("../util");
+const { Reader, Writer, TypeIO, Position } = require("../util");
+const Tile = require("./tile.js");
 const header = Buffer.from("msch");
-
-class Stile {
-	constructor(data = {}) {
-		this.block = "air";
-		this.position = new Position(0);
-		this.config = null;
-		this.rotation = 0;
-
-		Object.assign(this, data);
-		const me = this;
-		for(let i of ["block", "position", "config", "rotation"]) {
-			const fmt = capitalize(i);
-			this["get" + fmt] = () => me[i];
-			this["set" + fmt] = (val) => me[i] = val;
-		}
-	}
-}
 
 class Schematic {
 	// load or make a new Schematic
@@ -57,8 +41,8 @@ class Schematic {
 			const config = TypeIO.read(reader);
 			const rotation = reader.byte();
 			if (block === "air") continue;
-			const tile = new Stile({ block, position, config, rotation });
-			this.tiles.push(new Stile(tile));
+			const tile = new Tile({ block, position, config, rotation });
+			this.tiles.push(new Tile(tile));
 		}
 	}
 
@@ -77,7 +61,7 @@ class Schematic {
 			if (i.position.x === x && i.position.y === y) return i;
 		}
 
-		const block = new Stile({ 
+		const block = new Tile({ 
 			position: new Position({ x, y }),
 		});
 
@@ -137,7 +121,7 @@ class Schematic {
 	}
 
 	toString() {
-		let str = `Schematic "${this.tags.name}" {\n`;
+		return `Schematic { "${this.tags.name}" };`;
 	}
 
 	// reset the schematic

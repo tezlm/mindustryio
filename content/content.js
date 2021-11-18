@@ -1,4 +1,4 @@
-const { err, capitalize } = require("../util/misc.js");
+const { capitalize } = require("../util/misc.js");
 
 const ContentType = [
 	"item",
@@ -15,7 +15,7 @@ const ContentType = [
 	"typeid_UNUSED",
 	"error",
 	"planet",
-	"ammo",
+	"ammo_UNUSED",
 ];
 
 const content = {
@@ -26,8 +26,10 @@ const content = {
 		"deepwater",
 		"water",
 		"taintedWater",
+		"deepTaintedWater",
 		"tar",
 		"slag",
+		"cryofluid",
 		"stone",
 		"craters",
 		"charr",
@@ -39,6 +41,7 @@ const content = {
 		"snow",
 		"darksandTaintedWater",
 		"space",
+		"empty",
 		"dacite",
 		"stoneWall",
 		"dirtWall",
@@ -73,6 +76,7 @@ const content = {
 		"metalFloorDamaged",
 		"metalFloor2",
 		"metalFloor3",
+		"metalFloor4",
 		"metalFloor5",
 		"basalt",
 		"magmarock",
@@ -118,6 +122,8 @@ const content = {
 		"itemVoid",
 		"liquidSource",
 		"liquidVoid",
+		"payloadSource",
+		"payloadVoid",
 		"illuminator",
 		"copperWall",
 		"copperWallLarge",
@@ -158,8 +164,9 @@ const content = {
 		"overflowGate",
 		"underflowGate",
 		"massDriver",
-		"payloadConveyor",
-		"payloadRouter",
+		"duct",
+		"ductRouter",
+		"ductBridge",
 		"mechanicalPump",
 		"rotaryPump",
 		"thermalPump",
@@ -167,6 +174,7 @@ const content = {
 		"pulseConduit",
 		"platedConduit",
 		"liquidRouter",
+		"liquidContainer",
 		"liquidTank",
 		"liquidJunction",
 		"bridgeConduit",
@@ -226,7 +234,15 @@ const content = {
 		"exponentialReconstructor",
 		"tetrativeReconstructor",
 		"repairPoint",
-		"resupplyPoint",
+		"repairTurret",
+		"payloadConveyor",
+		"payloadRouter",
+		"payloadPropulsionTower",
+		"deconstructor",
+		"constructor",
+		"largeConstructor",
+		"payloadLoader",
+		"payloadUnloader",
 		"message",
 		"switchBlock",
 		"microProcessor",
@@ -237,11 +253,7 @@ const content = {
 		"memoryCell",
 		"memoryBank",
 		"launchPad",
-		"launchPadLarge",
 		"interplanetaryAccelerator",
-		"blockForge",
-		"blockLoader",
-		"blockUnloader",
 	],
 
 	Item: [
@@ -272,10 +284,10 @@ const content = {
 		"fortress",
 		"scepter",
 		"reign",
+		"vela",
 		"nova",
 		"pulsar",
 		"quasar",
-		"vela",
 		"corvus",
 		"atrax",
 		"spiroct",
@@ -299,6 +311,11 @@ const content = {
 		"bryde",
 		"sei",
 		"omura",
+		"retusa",
+		"oxynoe",
+		"cyerce",
+		"aegires",
+		"navanax",
 		"block",
 	],
 
@@ -327,9 +344,6 @@ const content = {
 		"standardThorium",
 		"standardHoming",
 		"standardIncendiary",
-		"standardDenseBig",
-		"standardThoriumBig",
-		"standardIncendiaryBig",
 		"waterShot",
 		"cryoShot",
 		"slagShot",
@@ -343,7 +357,6 @@ const content = {
 		"fireball",
 		"basicFlame",
 		"pyraFlame",
-		"driverBolt",
 	],
 };
 
@@ -362,7 +375,7 @@ class Content {
 	}
 }
 
-function getByName(kind, id) {
+function getByID(kind, id) {
 	if (typeof kind === "number" && !isNaN(kind)) kind = ContentType[kind];
 	const selected = content[capitalize(kind)];
 	if (!selected) throw "content doesnt exist";
@@ -373,6 +386,6 @@ module.exports = {
 	ContentType,
 	Content,
 	content,
-	getByName,
+	getByID,
 };
 

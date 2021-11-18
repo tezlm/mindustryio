@@ -1,5 +1,12 @@
-const { err, overflow, Position } = require("./misc.js");
-const { getByName, Content } = require("../content/content.js");
+const { overflow, Position } = require("./misc.js");
+const { getByID, Content } = require("../content/content.js");
+
+class BoxedContent {
+	constructor(type, id) {
+		this.type = type;
+		this.id = id;
+	}
+}
 
 function read(reader) {
 	const type = reader.byte();
@@ -13,7 +20,7 @@ function read(reader) {
 			if(exists === 0) return null;
 			return reader.string();
 		case 5:
-			return getByName(reader.byte(), reader.short());
+			return getByID(reader.byte(), reader.short());
 		case 6:
 			const len = reader.short();
 			const arr = [];
@@ -27,6 +34,10 @@ function read(reader) {
 			for (let i = 0; i < plen; i++)
 				points.push(new Position(reader.int()));
 			return points;
+		case 10: return !!reader.byte();
+		case 11: return reader.double();
+		case 12: return new BoxedContent("building", reader.short());
+		case 13: return getByIDLAccess[reader.short()];
 		case 14:
 			const blen = reader.int();
 			const slice = reader.raw(blen);
@@ -43,8 +54,8 @@ function write(stream, thing) {
 		stream.byte(0);
 	} else if (typeof thing === "number" && !isNaN(thing)) {
 		if (!Number.isInteger(thing)) {
-			stream.byte(3);
-			stream.float(thing);
+			stream.byte(11);
+			stream.double(thing);
 		} else if (thing > overflow) {
 			stream.byte(2);
 			stream.long(thing);
@@ -57,6 +68,9 @@ function write(stream, thing) {
 		if(!thing.length) return stream.byte(0);
 		stream.byte(1);
 		stream.string(thing);
+	} else if (typeof thing === "boolean") {
+		stream.byte(10);
+		stream.byte(+thing);
 	} else if (thing instanceof Content) {
 		stream.byte(5);
 		stream.byte(thing.typeId);
@@ -79,6 +93,14 @@ function write(stream, thing) {
 		stream.byte(14);
 		stream.int(thing.length);
 		stream.raw(thing);
+	} else if (thing instanceof BoxedContent) {
+		if(thing.type === "building") {
+			stream.byte(12);
+			stream.short(thing.position);
+		} else if(thing.type === "building") {
+			stream.byte(13);
+			stream.short(thing.id);
+		}
 	} else {
 		throw "can't pack";
 	}
